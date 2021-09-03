@@ -1,6 +1,6 @@
 # Learn along C
 
-This is a collection of code samples from the journey of learning Java using the [tutorialspoint C tutorial](https://www.tutorialspoint.com/learn_c_by_examples)
+This is a collection of code samples from the journey of learning Java using the [tutorialspoint C tutorial](https://www.tutorialspoint.com/cprogramming)
 
 ## Dependencies
 
