@@ -4,9 +4,9 @@
 
 struct Record
 {
-    int* next;
+    long next;
     char* value;
-    int* previous;
+    long previous;
 };
 
 struct List {
@@ -65,9 +65,9 @@ char* createHeapAllocatedString(char * str, int maxCharaters);
 int main(){
     printf("hello world");
     struct List data;
-    int maxSize = 200;
-    char **strings = {"Hello World", "Hi World", "Bonjour Monde"};
-    int noOfStrings = strlen(strings);
+    int maxSize = 20;
+    char *strings[20] = {"Hello World", "Hi World", "Bonjour Monde"};
+    int noOfStrings = 3;
 
     for(int i = 0; i < noOfStrings; i++){
         insertItem(&data, *(strings+i), maxSize);
@@ -91,26 +91,24 @@ int main(){
 
 void insertItem(struct List *records, char* newRecord, int maxCharaters){
     struct Record last;
-    last.next = NULL;
+    // last.next = (int) NULL;
     last.value = createHeapAllocatedString(newRecord, maxCharaters);
+    // last.previous = (int) NULL;
 
-    if(records->length == NULL){
-        records->length = 0;
-        last.previous = NULL;
-    } else {
+    if(records->length > 0){
         int lastIndex = records->length - 1;
-        last.previous = (records->data) + lastIndex;
+        last.previous = (long)(records->data) + lastIndex;
     }
 
     records->length++;
 }
 
 char* findItem(struct List *records, int index){
-    return *(records->data + index)->value;
+    return (records->data + index)->value;
 }
 
 void deleteItem(struct List *records, int index){
-    if(records->length == NULL || index >= records->length){
+    if(records->length == 0 || index >= records->length){
         fprintf(stderr, "index %d is out of range", index);
     } else {
         struct Record *item = (records->data) + index;
@@ -126,11 +124,11 @@ void deleteItem(struct List *records, int index){
         }
 
         if(previousItem != NULL){
-            previousItem->next = nextItem;
+            previousItem->next = (long) nextItem;
         }
 
         if(nextItem != NULL){
-            nextItem->previous = previousItem;
+            nextItem->previous = (long) previousItem;
         }
 
         records->length--;
@@ -143,7 +141,7 @@ void printList(struct List *records){
     printf("{");
 
     for(int i = 0; i <= lastIndex; i++){
-        printf("%s", *(records->data + i)->value);
+        printf("%s", (records->data + i)->value);
         if(i < lastIndex){
             printf(", ");
         }
