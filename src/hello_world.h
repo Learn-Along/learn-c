@@ -54,9 +54,9 @@ void printList(List *records);
 /**
  * @brief Create a Heap Allocated String object
  * 
- * @param str 
- * @param maxCharaters 
- * @return char* 
+ * @param str the sring to be copied to the heap
+ * @param maxCharaters maximum number of characters the tring must have
+ * @return char*
  */
 char* createHeapAllocatedString(char * str, int maxCharaters);
 
