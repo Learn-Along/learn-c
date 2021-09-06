@@ -49,19 +49,23 @@ void deleteItem(List *records, int index){
     }
 }
 
-void printList(List *records){
+void printList(List *records, FILE* stream){
     int lastIndex = records->length - 1;
+    
+    if(stream == NULL){
+        stream = stdin;
+    }
 
-    printf("{");
+    fprintf(stream, "{");
 
     for(int i = 0; i <= lastIndex; i++){
-        printf("%s", (records->data + i)->value);
+        fprintf(stream,"%s", (records->data + i)->value);
         if(i < lastIndex){
-            printf(", ");
+            fprintf(stream, ", ");
         }
     }
 
-    printf("}");
+    fprintf(stream, "}");
 }
 
 char* createHeapAllocatedString(char * str, int maxCharaters){

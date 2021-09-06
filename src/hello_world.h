@@ -1,19 +1,20 @@
 #ifndef HELLO_WORLD_H
 #define HELLO_WORLD_H
 
+#include <stdio.h>
+
 // the configured options and settings for hello world
 #define helloworld_VERSION_MAJOR @helloworld_VERSION_MAJOR@
 #define helloworld_VERSION_MINOR @helloworld_VERSION_MINOR@
 #define helloworld_VERSION_PATCH @helloworld_VERSION_PATCH@
 
-typedef struct
-{
+typedef struct Record {
     long next;
     char* value;
     long previous;
 } Record;
 
-typedef struct {
+typedef struct List {
     Record *data;
     int length;
 } List;
@@ -47,9 +48,10 @@ void deleteItem(List *records, int index);
 /**
  * @brief prints the linked list
  * 
- * @param records 
+ * @param records the doubly-linked list to be printed
+ * @param stream the stream file descriptor pointor to which to output the data
  */
-void printList(List *records);
+void printList(List *records, FILE* stream);
 
 /**
  * @brief Create a Heap Allocated String object

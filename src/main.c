@@ -18,7 +18,7 @@ int main(){
     }
 
     printf("the linked list: \n");
-    printList(&data);
+    printList(&data, NULL);
 
     for(int i=0; i < noOfStrings; i++){
         printf("Item at %d is %s", i, findItem(&data, i));
@@ -27,7 +27,7 @@ int main(){
     for(int i=0; i < noOfStrings; i++){
         deleteItem(&data, i);
         printf("the linked list after deleting index %d: \n", i);
-        printList(&data);
+        printList(&data, NULL);
     }    
 
     return 0;
