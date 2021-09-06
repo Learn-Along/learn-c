@@ -1,6 +1,11 @@
 # Learn along C
 
-This is a collection of code samples from the journey of learning Java using the [tutorialspoint C tutorial](https://www.tutorialspoint.com/cprogramming)
+This is a collection of code samples from the journey of learning C
+
+## Learning Resources
+
+- [Crafting Interpreters by Robert Nystrom](https://craftinginterpreters.com/)
+- [tutorialspoint C tutorial](https://www.tutorialspoint.com/cprogramming)
 
 ## Dependencies
 
