@@ -9,12 +9,11 @@
  */
 int main(){
     List data;
-    int maxSize = 20;
-    char *strings[20] = {"Hello World", "Hi World", "Bonjour Monde"};
+    char* strings[] = {"Hello World", "Hi World", "Bonjour Monde"};
     int noOfStrings = 3;
 
     for(int i = 0; i < noOfStrings; i++){
-        insertItem(&data, *(strings+i), maxSize);
+        appendItem(&data, *(strings+i));
     }
 
     printf("the linked list: \n");

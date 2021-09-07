@@ -8,25 +8,39 @@
 #define helloworld_VERSION_MINOR @helloworld_VERSION_MINOR@
 #define helloworld_VERSION_PATCH @helloworld_VERSION_PATCH@
 
-typedef struct Record {
-    long next;
+extern __thread int globalErrorNumber;
+#define reportError(err) (globalErrorNumber = (err))
+#define hw_errono (globalErrorNumber)
+
+#define HW_INDEX_ERROR 1
+
+typedef struct _Record {
+    struct _Record* next;
     char* value;
-    long previous;
-} Record;
+    struct _Record* previous;
+} _Record;
 
 typedef struct List {
-    Record *data;
+    _Record *data;
     int length;
 } List;
 
 /**
- * @brief Inserts the given record at the end of the list of strings
+ * @brief Inserts the given record at the given index of the list of strings
  * 
- * @param records 
- * @param newRecord 
- * @param maxCharaters 
+ * @param records doubly linked list of records
+ * @param value new value to be inserted
+ * @param index index where the value is to be inserted
  */
-void insertItem(List *records, char* newRecord, int maxCharaters);
+void insertItem(List *records, char* value, int index);
+
+/**
+ * @brief Appends the given value to the end of the list
+ * 
+ * @param records doubly linked list of records
+ * @param value new value to be appended to the end of the records
+ */
+void appendItem(List *records, char* value);
 
 /**
  * @brief finds the value at the given index and returns it
@@ -46,6 +60,13 @@ char* findItem(List *records, int index);
 void deleteItem(List *records, int index);
 
 /**
+ * @brief Frees up memory for the list. Call this when the list is no longer needed.
+ * 
+ * @param records the doubly linked list which is to be removed from memory
+ */
+void freeList(List *records);
+
+/**
  * @brief prints the linked list
  * 
  * @param records the doubly-linked list to be printed
@@ -60,6 +81,6 @@ void printList(List *records, FILE* stream);
  * @param maxCharaters maximum number of characters the tring must have
  * @return char*
  */
-char* createHeapAllocatedString(char * str, int maxCharaters);
+char* __createHeapAllocatedString(char * str, int maxCharaters);
 
 #endif /* HELLO_WORLD_H */
