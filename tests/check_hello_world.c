@@ -128,6 +128,16 @@ START_TEST(TestAppendItem)
 }
 END_TEST
 
+START_TEST(TestInitializeList)
+{
+    List records;
+    __initializeList(&records);
+
+    ck_assert_int_eq(records.length, 0);
+    ck_assert_ptr_eq(records.data, NULL);
+}
+END_TEST
+
 START_TEST(TestToString)
 {
     _Record* first = __createRecord(NULL, "hi", NULL);
@@ -196,13 +206,14 @@ Suite* createHelloWorldTestSuite(void){
     s = suite_create("Doubly-linked list");
 
     tcCore = tcase_create("Core");
-    // tcase_add_test(tcCore, TestCreateHeapAllocatedString);
-    // tcase_add_test(tcCore, TestConcatString);
-    // tcase_add_test(tcCore, TestToString);
-    // tcase_add_test(tcCore, TestToStringEmptyList);
-    // tcase_add_test(tcCore, TestAppendItem);
-    // tcase_add_test(tcCore, TestInsertItem);
-    // tcase_add_test(tcCore, TestFindItem);
+    tcase_add_test(tcCore, TestCreateHeapAllocatedString);
+    tcase_add_test(tcCore, TestConcatString);
+    tcase_add_test(tcCore, TestToString);
+    tcase_add_test(tcCore, TestToStringEmptyList);
+    tcase_add_test(tcCore, TestInitializeList);
+    tcase_add_test(tcCore, TestAppendItem);
+    tcase_add_test(tcCore, TestInsertItem);
+    tcase_add_test(tcCore, TestFindItem);
     tcase_add_test(tcCore, TestDeleteItem);
 
     suite_add_tcase(s, tcCore);
