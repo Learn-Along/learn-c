@@ -52,6 +52,7 @@ START_TEST(TestInsertItem)
     insertItem(&records, secondStr, 1);
     insertItem(&records, fourthStr, 3);  
 
+    ck_assert_int_eq(records.length, 5);
     actual = toString(&records);
     ck_assert_msg(
         strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
@@ -75,6 +76,8 @@ START_TEST(TestAppendItem)
     {
         appendItem(&records, strings[i]);
     }
+
+    ck_assert_int_eq(records.length, stringsCount);
 
     actual = toString(&records);
     ck_assert_msg(
