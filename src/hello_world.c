@@ -6,6 +6,9 @@
 __thread int globalErrorNumber;
 
 void insertItem(List *records, char* value, int index){
+    // initialize length
+    __initializeList(records);
+
     _Record newRecord;
     _Record* previousRecord = NULL;
     _Record* nextRecord = NULL;
@@ -52,13 +55,15 @@ void insertItem(List *records, char* value, int index){
 }
 
 void appendItem(List *records, char* value){
+    // initialize length
+    __initializeList(records);
+
     int lastIndex = records->length - 1;
     _Record* previousRecord;
-    _Record newRecord = {
-        .next = NULL,
-        .previous = NULL,
-        .value = __createHeapAllocatedString(value, strlen(value) + 1),
-    };
+    _Record* newRecord = __createRecord(NULL, value, NULL);
+    if(newRecord == NULL){
+        ERROR_LOG_FATAL("appendItem: memory allocation error for new record");
+    }
 
     _Record* currentRecordPtr = records->data;
     int count = 0;
@@ -66,7 +71,7 @@ void appendItem(List *records, char* value){
         // get and set the previous record
         if(count == lastIndex){
             previousRecord = currentRecordPtr;
-            previousRecord->next = &newRecord;
+            previousRecord->next = newRecord;
         }
 
         currentRecordPtr = currentRecordPtr->next;
@@ -74,14 +79,17 @@ void appendItem(List *records, char* value){
     }
 
     if(records->length == 0){
-        records->data = &newRecord;
+        records->data = newRecord;
     }
 
-    newRecord.previous = previousRecord;
+    newRecord->previous = previousRecord;
     records->length++;
 }
 
 char* findItem(List *records, int index){
+    // initialize length
+    __initializeList(records);
+
     _Record* item;
     _Record* firstItem = records->data;
     int lastIndex = records->length - 1;
@@ -101,6 +109,9 @@ char* findItem(List *records, int index){
 }
 
 void deleteItem(List *records, int index){
+    // initialize length
+    __initializeList(records);
+
     _Record *previousItem = NULL;
     _Record *nextItem = NULL;
     _Record *item = NULL;
@@ -160,12 +171,33 @@ void freeList(List *records){
     _Record* currentRecordPtr = records->data;
 
     while(currentRecordPtr != NULL){
-        FREE_IF_DEFINED(currentRecordPtr->value);
+        _Record* cachedPtr = currentRecordPtr;
         currentRecordPtr = currentRecordPtr->next;
+
+        FREE_IF_DEFINED(cachedPtr->value);
+        FREE_IF_DEFINED(cachedPtr);
     }
+
+    records->data = NULL;
+}
+
+_Record* __createRecord(_Record* previous, char* value, _Record* next){
+    _Record* record = malloc(sizeof(_Record));
+    if(record == NULL){
+        reportError(HW_MEM_ALLOC_ERROR);
+        return NULL;
+    }
+
+    record->next = next;
+    record->previous = previous;
+    record->value = __createHeapAllocatedString(value, strlen(value) + 1);
+
+    return record;
 }
 
 char* toString(List *records){
+    __initializeList(records);
+
     int lastIndex = records->length - 1;
     size_t maxBufferStrLength = 300;
     char* bufferStr = __createHeapAllocatedString("{", maxBufferStrLength);
@@ -245,5 +277,14 @@ char* __concatString(char* dest, char* src, size_t currentMaxStrLength){
     }
 
     return strcat(dest, src);
+}
+
+void __initializeList(List* records){
+    if(records->length < 0){
+        records->length = 0;
+    }
+    // if(records->data){
+    //     records->data == NULL;
+    // }
 }
 

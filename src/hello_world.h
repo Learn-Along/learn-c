@@ -29,6 +29,23 @@ typedef struct List {
 } List;
 
 /**
+ * @brief Initialize the list with default values
+ * 
+ * @param records the list to be initialized
+ */
+void __initializeList(List *records);
+
+/**
+ * @brief Creates a new record on the heap
+ * 
+ * @param previous the previous record for this record
+ * @param value the value of this record
+ * @param next the next record after current record
+ * @return _Record* 
+ */
+_Record* __createRecord(_Record* previous, char* value, _Record* next);
+
+/**
  * @brief Inserts the given record at the given index of the list of strings
  * 
  * @param records doubly linked list of records
