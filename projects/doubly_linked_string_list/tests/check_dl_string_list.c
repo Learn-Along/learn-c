@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <check.h>
 #include <string.h>
-#include "../src/hello_world.h"
+#include "../src/dl_string_list.h"
 
 START_TEST(TestDeleteItem)
 {
@@ -203,7 +203,7 @@ Suite* createHelloWorldTestSuite(void){
     Suite *s;
     TCase *tcCore;
 
-    s = suite_create("Doubly-linked list");
+    s = suite_create("Doubly-linked String list");
 
     tcCore = tcase_create("Core");
     tcase_add_test(tcCore, TestCreateHeapAllocatedString);

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "hello_world.h"
+#include "dl_string_list.h"
 
 __thread int globalErrorNumber;
 
@@ -178,7 +178,7 @@ void freeList(List *records){
 }
 
 _Record* __createRecord(_Record* previous, char* value, _Record* next){
-    _Record* record = malloc(sizeof(_Record));
+    _Record* record = (_Record*) malloc(sizeof(_Record));
     if(record == NULL){
         reportError(HW_MEM_ALLOC_ERROR);
         return NULL;

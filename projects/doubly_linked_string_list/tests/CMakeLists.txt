@@ -13,8 +13,8 @@ find_package(Threads REQUIRED)
 include_directories(${CHECK_INCLUDE_DIRS})
 
 set(TEST_SOURCES
-  check_hello_world.c
+  check_dl_string_list.c
 )
 
-add_executable(check_hello_world ${TEST_SOURCES})
-target_link_libraries(check_hello_world helloworld ${CHECK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+add_executable(check_dl_string_list ${TEST_SOURCES})
+target_link_libraries(check_dl_string_list dlstringlist ${CHECK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})

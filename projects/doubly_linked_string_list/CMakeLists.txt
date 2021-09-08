@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
-project(helloworld VERSION 0.0.1)
+project(dlstringlist VERSION 0.0.1)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 ###############################################################################
@@ -78,7 +78,7 @@ add_subdirectory(tests)
 ###############################################################################
 # Unit tests
 enable_testing()
-add_test(NAME check_hello_world COMMAND check_hello_world)
+add_test(NAME check_dl_string_list COMMAND check_dl_string_list)
 
 
 
