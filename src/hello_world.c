@@ -281,9 +281,10 @@ void __initializeList(List* records){
     if(records->length < 0){
         records->length = 0;
     }
-    // if(records->data){
-    //     records->data == NULL;
-    // }
+
+    if(records->length == 0){
+        records->data = NULL;
+    }
 }
 
 char* __quoteHeapString(char* str){

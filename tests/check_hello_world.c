@@ -23,14 +23,20 @@ START_TEST(TestDeleteItem)
     List records = {.data=data[0], .length=noOfRecords};
 
     // delete the last two records
-    for (int i = 1; i < noOfRecords; i++)
+    for (int i = noOfRecords - 1; i >= 0; i--)
     {
-        ck_assert_str_eq(findItem(&records, 1), strings[i]);
+        ck_assert_str_eq(findItem(&records, i), strings[i]);
 
-        deleteItem(&records, 1);
-        ck_assert_int_eq(records.length, (noOfRecords - i));
-        ck_assert_ptr_ne(findItem(&records, 1), strings[i]);
+        deleteItem(&records, i);
+        ck_assert_int_eq(records.length, i);
+        ck_assert_ptr_ne(findItem(&records, i), strings[i]);
     }
+
+    char* expected = "{}";
+    char* actual = toString(&records);
+    ck_assert_msg(
+        strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
+    FREE_IF_DEFINED(actual);
 }
 END_TEST
 
@@ -57,6 +63,8 @@ START_TEST(TestFindItem)
     {
         ck_assert_str_eq(findItem(&records, i), strings[i]);
     }
+
+    freeList(&records);
 }
 END_TEST
 
@@ -141,6 +149,17 @@ START_TEST(TestToString)
 }
 END_TEST
 
+START_TEST(TestToStringEmptyList)
+{
+    List records = {.data=NULL, .length=0};
+    char* expected = "{}";
+    char* actual = toString(&records);
+    ck_assert_msg(
+        strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
+    FREE_IF_DEFINED(actual);
+}
+END_TEST
+
 START_TEST(TestCreateHeapAllocatedString)
 {
     char* expected = "hello there";
@@ -177,12 +196,13 @@ Suite* createHelloWorldTestSuite(void){
     s = suite_create("Doubly-linked list");
 
     tcCore = tcase_create("Core");
-    tcase_add_test(tcCore, TestCreateHeapAllocatedString);
-    tcase_add_test(tcCore, TestConcatString);
-    tcase_add_test(tcCore, TestToString);
-    tcase_add_test(tcCore, TestAppendItem);
-    tcase_add_test(tcCore, TestInsertItem);
-    tcase_add_test(tcCore, TestFindItem);
+    // tcase_add_test(tcCore, TestCreateHeapAllocatedString);
+    // tcase_add_test(tcCore, TestConcatString);
+    // tcase_add_test(tcCore, TestToString);
+    // tcase_add_test(tcCore, TestToStringEmptyList);
+    // tcase_add_test(tcCore, TestAppendItem);
+    // tcase_add_test(tcCore, TestInsertItem);
+    // tcase_add_test(tcCore, TestFindItem);
     tcase_add_test(tcCore, TestDeleteItem);
 
     suite_add_tcase(s, tcCore);
