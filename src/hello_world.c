@@ -117,7 +117,6 @@ void deleteItem(List *records, int index){
     _Record *item = NULL;
     int listLength = records->length;
 
-    // ensure the memory is also freed
     if(listLength == 0 || index >= listLength || index < 0){
         reportError(HW_INDEX_ERROR);
         return;
@@ -159,12 +158,9 @@ void deleteItem(List *records, int index){
     }
 
     // delete the current item
-    if(item != NULL){
-        free(item->value);
-    }
+    FREE_IF_DEFINED(item);
 
-    records->length--;
-    
+    records->length--;    
 }
 
 void freeList(List *records){
