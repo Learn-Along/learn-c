@@ -3,24 +3,52 @@
 #include <string.h>
 #include "../src/hello_world.h"
 
+START_TEST(TestInsertItem)
+{
+    char* secondStr = "hello"; // on index 1
+    char* fourthStr = "t'abwooli"; // on index 3   
+    char* expected = "{'hi', 'hello', 'bonjour', 't'abwooli', 'origye?'}";
+    char* actual;
+
+    _Record* data[] = {
+        __createRecord(NULL, "hi", NULL), 
+        __createRecord(NULL, "bonjour", NULL),
+        __createRecord(NULL, "origye?", NULL),
+    };
+
+    // arranging in order
+    data[0]->next = data[1];
+    data[1]->next = data[2];
+
+    List records = {.data=data[0], .length=3};
+
+    // insert
+    insertItem(&records, secondStr, 1);
+    insertItem(&records, fourthStr, 3);  
+
+    actual = toString(&records);
+    ck_assert_msg(
+        strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
+
+    FREE_IF_DEFINED(actual);
+
+    freeList(&records);    
+}
+END_TEST
+
+
 START_TEST(TestAppendItem)
 {
     List records;
     char* strings[] = {"hi", "hello", "bonjour", "t'abwooli", "origye?"};
     int stringsCount = sizeof(strings) / sizeof(char*);    
-    char* expected = "{hi, hello, bonjour, t'abwooli, origye?}";
+    char* expected = "{'hi', 'hello', 'bonjour', 't'abwooli', 'origye?'}";
     char* actual;
 
     for (int i = 0; i < stringsCount; i++)
     {
         appendItem(&records, strings[i]);
     }
-
-    _Record* current = records.data;
-    while (current != NULL)
-    {
-        current = current->next;
-    }    
 
     actual = toString(&records);
     ck_assert_msg(
@@ -44,7 +72,7 @@ START_TEST(TestToString)
 
     List records = {.data=first, .length=3};
     
-    char* expected = "{hi, hello, bonjour}";
+    char* expected = "{'hi', 'hello', 'bonjour'}";
     char* actual = toString(&records);
     ck_assert_msg(
         strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
@@ -93,6 +121,7 @@ Suite* createHelloWorldTestSuite(void){
     tcase_add_test(tcCore, TestConcatString);
     tcase_add_test(tcCore, TestToString);
     tcase_add_test(tcCore, TestAppendItem);
+    tcase_add_test(tcCore, TestInsertItem);
 
     suite_add_tcase(s, tcCore);
     return s;

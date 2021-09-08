@@ -112,4 +112,12 @@ char* __createHeapAllocatedString(char* str, size_t maxCharaters);
  */
 char* __concatString(char* dest, char* src, size_t currentMaxStrLength);
 
+/**
+ * @brief Quotes a given string with single quotes
+ * 
+ * @param str 
+ * @return char* 
+ */
+char* __quoteHeapString(char* str);
+
 #endif /* HELLO_WORLD_H */

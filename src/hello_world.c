@@ -9,14 +9,19 @@ void insertItem(List *records, char* value, int index){
     // initialize length
     __initializeList(records);
 
-    _Record newRecord;
     _Record* previousRecord = NULL;
     _Record* nextRecord = NULL;
+    _Record* newRecord = __createRecord(NULL, value, NULL);
+    if(newRecord == NULL){
+        fprintf(stderr,"insertItem: memory allocation error for new record");
+        return;
+    };
     int noOfRecords = records->length;
     int lastIndex = noOfRecords - 1;
 
     if(index > lastIndex || index < 0){
         reportError(HW_INDEX_ERROR);
+        fprintf(stderr,"insertItem: index %d is out of range for list length: %d", index, records->length);
         return;
     }
 
@@ -29,13 +34,13 @@ void insertItem(List *records, char* value, int index){
         // get and set the previous record
         if(count == previousIndex){
             previousRecord = currentRecordPtr;
-            previousRecord->next = &newRecord;
+            previousRecord->next = newRecord;
         }
 
         // get and set the next record
         if(count == index){
             nextRecord = currentRecordPtr;
-            nextRecord->previous = &newRecord;
+            nextRecord->previous = newRecord;
         }
 
         currentRecordPtr = cachedRecord.next;
@@ -43,26 +48,24 @@ void insertItem(List *records, char* value, int index){
     }
 
     // set up the new record    
-    newRecord.next = nextRecord;
-    newRecord.value = __createHeapAllocatedString(value, strlen(value) + 1);
-    newRecord.previous = previousRecord;
+    newRecord->next = nextRecord;
+    newRecord->previous = previousRecord;
 
-    // reset the list
     if(index == 0){
-        records->data = &newRecord;
+        records->data = newRecord;
     }
     records->length++;
 }
 
 void appendItem(List *records, char* value){
-    // initialize length
     __initializeList(records);
 
     int lastIndex = records->length - 1;
     _Record* previousRecord;
     _Record* newRecord = __createRecord(NULL, value, NULL);
     if(newRecord == NULL){
-        ERROR_LOG_FATAL("appendItem: memory allocation error for new record");
+        fprintf(stderr,"appendItem: memory allocation error for new record");
+        return;
     }
 
     _Record* currentRecordPtr = records->data;
@@ -87,7 +90,6 @@ void appendItem(List *records, char* value){
 }
 
 char* findItem(List *records, int index){
-    // initialize length
     __initializeList(records);
 
     _Record* item;
@@ -109,7 +111,6 @@ char* findItem(List *records, int index){
 }
 
 void deleteItem(List *records, int index){
-    // initialize length
     __initializeList(records);
 
     _Record *previousItem = NULL;
@@ -212,9 +213,11 @@ char* toString(List *records){
 
     while (currentRecordPtr != NULL)
     {
-        size_t currentValueLength = strlen(currentRecordPtr->value);
+        // quote the string value
+        char* quotedValue = __quoteHeapString(currentRecordPtr->value);
+        size_t currentValueLength = strlen(quotedValue);
         size_t bufferStrLength = strlen(bufferStr);
-        char* value = __createHeapAllocatedString(currentRecordPtr->value, currentValueLength);
+        char* value = __createHeapAllocatedString(quotedValue, currentValueLength);
         if(value == NULL){
             ERROR_LOG_FATAL("toString: Memory allocation failure for value: %s\n", value);              
         }
@@ -286,5 +289,20 @@ void __initializeList(List* records){
     // if(records->data){
     //     records->data == NULL;
     // }
+}
+
+char* __quoteHeapString(char* str){
+    char* openingQuote = __createHeapAllocatedString("'", 1);
+    if(openingQuote == NULL){
+        ERROR_LOG_FATAL("toString: Memory allocation failure for openingQuote: %s\n", openingQuote);              
+    }
+
+    char* closingQuote = __createHeapAllocatedString("'", 1);
+    if(closingQuote == NULL){
+        ERROR_LOG_FATAL("toString: Memory allocation failure for closingQuote: %s\n", closingQuote);              
+    }
+
+    char* quotedStr = strcat(openingQuote, str);
+    return strcat(quotedStr, closingQuote);
 }
 
