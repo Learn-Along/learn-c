@@ -3,6 +3,32 @@
 #include <string.h>
 #include "../src/hello_world.h"
 
+START_TEST(TestFindItem)
+{
+    char* strings[] = {"hi", "hello", "bonjour"};
+    size_t noOfRecords = sizeof(strings) / sizeof(char*);
+    _Record* data[noOfRecords];
+
+    for (int i = 0; i < noOfRecords; i++)
+    {
+        data[i] = __createRecord(NULL, strings[i], NULL);
+
+        if(i > 0){
+            _Record* previousRecord = data[i-1];
+            previousRecord->next = data[i];
+            data[i]->previous = previousRecord;
+        }
+    }
+    
+    List records = {.data=data[0], .length=noOfRecords};
+
+    for (int i = 0; i < noOfRecords; i++)
+    {
+        ck_assert_str_eq(findItem(&records, i), strings[i]);
+    }
+}
+END_TEST
+
 START_TEST(TestInsertItem)
 {
     char* secondStr = "hello"; // on index 1
@@ -122,6 +148,7 @@ Suite* createHelloWorldTestSuite(void){
     tcase_add_test(tcCore, TestToString);
     tcase_add_test(tcCore, TestAppendItem);
     tcase_add_test(tcCore, TestInsertItem);
+    tcase_add_test(tcCore, TestFindItem);
 
     suite_add_tcase(s, tcCore);
     return s;

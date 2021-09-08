@@ -92,7 +92,6 @@ void appendItem(List *records, char* value){
 char* findItem(List *records, int index){
     __initializeList(records);
 
-    _Record* item;
     _Record* firstItem = records->data;
     int lastIndex = records->length - 1;
 
