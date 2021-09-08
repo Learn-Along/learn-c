@@ -11,8 +11,11 @@
 extern __thread int globalErrorNumber;
 #define reportError(err) (globalErrorNumber = (err))
 #define hw_errono (globalErrorNumber)
+#define ERROR_LOG_FATAL(...) fprintf(stderr,  __VA_ARGS__); return NULL;
+#define FREE_IF_DEFINED(ptr) if(ptr != NULL){free(ptr); ptr = NULL;}
 
 #define HW_INDEX_ERROR 1
+#define HW_MEM_ALLOC_ERROR 2
 
 typedef struct _Record {
     struct _Record* next;
@@ -67,20 +70,29 @@ void deleteItem(List *records, int index);
 void freeList(List *records);
 
 /**
- * @brief prints the linked list
+ * @brief converts the list to a string representation
  * 
  * @param records the doubly-linked list to be printed
- * @param stream the stream file descriptor pointor to which to output the data
  */
-void printList(List *records, FILE* stream);
+char* toString(List *records);
 
 /**
  * @brief Create a Heap Allocated String object
  * 
  * @param str the sring to be copied to the heap
- * @param maxCharaters maximum number of characters the tring must have
+ * @param maxCharaters maximum number of characters the string must have
  * @return char*
  */
-char* __createHeapAllocatedString(char * str, int maxCharaters);
+char* __createHeapAllocatedString(char* str, size_t maxCharaters);
+
+/**
+ * @brief Concatenates a string src to dest and returns dest, expanding its memory if there is need
+ * 
+ * @param dest the desitnation string whose pointer is to be returned
+ * @param src the source string that is to be concatenated to the dest string
+ * @param currentMaxStrLength the maximum number of characters already permissible in dest
+ * @return char* 
+ */
+char* __concatString(char* dest, char* src, size_t currentMaxStrLength);
 
 #endif /* HELLO_WORLD_H */

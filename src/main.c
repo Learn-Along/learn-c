@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "hello_world.h"
 
+
 /**
  * @brief The main function
  * 
@@ -13,11 +14,10 @@ int main(){
     int noOfStrings = 3;
 
     for(int i = 0; i < noOfStrings; i++){
-        appendItem(&data, *(strings+i));
+        appendItem(&data, strings[i]);
     }
 
-    printf("the linked list: \n");
-    printList(&data, NULL);
+    printf("the linked list: \n %s", toString(&data));
 
     for(int i=0; i < noOfStrings; i++){
         printf("Item at %d is %s", i, findItem(&data, i));
@@ -25,8 +25,7 @@ int main(){
 
     for(int i=0; i < noOfStrings; i++){
         deleteItem(&data, i);
-        printf("the linked list after deleting index %d: \n", i);
-        printList(&data, NULL);
+        printf("the linked list after deleting index %d: \n%s", i, toString(&data));
     }    
 
     return 0;

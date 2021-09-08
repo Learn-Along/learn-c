@@ -3,6 +3,35 @@
 #include <string.h>
 #include "../src/hello_world.h"
 
+// START_TEST(TestAppendItem)
+// {
+//     List records;
+//     char* strings[] = {"hi", "hello", "bonjour", "t'abwooli", "origye?"};
+//     int stringsCount = sizeof(strings) / sizeof(char*);    
+//     char* expected = "{hi, hello, bonjour, t'abwooli, origye?}";
+//     char* actual;
+
+//     for (int i = 0; i < stringsCount; i++)
+//     {
+//         appendItem(&records, strings[i]);
+//     }
+
+//     actual = toString(&records);
+//     ck_assert_msg(
+//         strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
+
+//     free(actual);
+
+//     // freeList(&records);    
+// }
+// END_TEST
+
+// START_TEST(TestInsertItem)
+// {
+
+// }
+// END_TEST
+
 START_TEST(TestCreateHeapAllocatedString)
 {
     char* expected = "hello there";
@@ -13,51 +42,35 @@ START_TEST(TestCreateHeapAllocatedString)
 }
 END_TEST
 
-// START_TEST(TestPrintList)
-// {
-//     char* strings[] = {"hi", "hello", "bonjour", "t'abwooli", "origye?"};
-//     char* expected = "{hi, hello, bonjour, t'abwooli, origye?}";
-//     char* actual = "";
+START_TEST(TestConcatString)
+{
+    size_t sizeOfCharPtr = sizeof(char*);
+    char* dest = (char*) malloc((2 * sizeOfCharPtr) + 1);
+    strcpy(dest, "hi");
 
-    // _Record data[] = {
-    //     {.value = strings[0], .next = strings[1]},
-    //     {.previous = strings[0], .value = strings[1], .next = strings[2]},
-    //     {.previous = strings[1], .value = strings[2], .next = strings[3]},
-    //     {.previous = strings[2], .value = strings[3], .next = strings[4]},
-    //     {.previous = strings[3], .value = strings[4]},
-    // };
-    // List records = { .data=data, .length=sizeof(data)  };
+    char* src = (char*) malloc((6 * sizeOfCharPtr) + 1);
+    strcpy(src, " world");
 
-
-    // FILE* dummyStdin = fopen("dummy-stdin-test-print-list.txt", "w+");    
-    // printList(&records, dummyStdin);
+    char* expected = "hi world";
+    __concatString(dest, src, 2);
+    ck_assert_msg(
+        strcmp(expected, dest) == 0, "expected %s; got %s", expected, dest);
     
-    // int bufferSize = 300;
-    // char buffer[300];
-    // while(fgets(buffer, bufferSize, dummyStdin) != NULL){
-    //     strcat(actual, buffer);
-    // }
-
-    // if(!feof(dummyStdin)){
-    //     fclose(dummyStdin);
-    //     ck_abort_msg("Dummy Stdin never reached the end of file");
-    // } else {
-    //     fclose(dummyStdin);
-    //     ck_assert_msg(
-    //         strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
-    // }    
-// }
-// END_TEST
+    FREE_IF_DEFINED(dest);
+    FREE_IF_DEFINED(src);
+}
+END_TEST
 
 Suite* createHelloWorldTestSuite(void){
     Suite *s;
     TCase *tcCore;
 
-    s = suite_create("Hello World");
+    s = suite_create("Doubly-linked list");
 
     tcCore = tcase_create("Core");
     tcase_add_test(tcCore, TestCreateHeapAllocatedString);
-    // tcase_add_test(tcCore, TestPrintList);
+    tcase_add_test(tcCore, TestConcatString);
+    // tcase_add_test(tcCore, TestAppendItem);
 
     suite_add_tcase(s, tcCore);
     return s;

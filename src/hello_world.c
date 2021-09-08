@@ -88,7 +88,7 @@ char* findItem(List *records, int index){
 
     if(index > lastIndex || index < 0){
         reportError(HW_INDEX_ERROR);
-        return;
+        return NULL;
     }
 
     _Record* currentRecordPtr = records->data;
@@ -164,33 +164,86 @@ void freeList(List *records){
     }
 }
 
-void printList(List *records, FILE* stream){
+char* toString(List *records){
     int lastIndex = records->length - 1;
-    
-    if(stream == NULL){
-        stream = stdin;
+    size_t maxBufferStrLength = 300;
+    char* bufferStr = __createHeapAllocatedString("{", maxBufferStrLength);
+    if(bufferStr == NULL){
+        ERROR_LOG_FATAL("toString: Memory allocation failure adding '}': %s\n", bufferStr);              
     }
 
-    fprintf(stream, "{");
+    _Record* currentRecordPtr = records->data;
+    int count = 0;
+    char* separator = ", ";
+    size_t charsInSeparator = strlen(separator);
 
-    for(int i = 0; i <= lastIndex; i++){
-        fprintf(stream,"%s", (records->data + i)->value);
-        if(i < lastIndex){
-            fprintf(stream, ", ");
+    while (currentRecordPtr != NULL)
+    {
+        size_t currentValueLength = strlen(currentRecordPtr->value);
+        size_t bufferStrLength = strlen(bufferStr);
+        char* value = __createHeapAllocatedString(currentRecordPtr->value, currentValueLength);
+        if(value == NULL){
+            ERROR_LOG_FATAL("toString: Memory allocation failure for value: %s\n", value);              
         }
+
+        // add separator
+        if(count < lastIndex){
+            value = __concatString(value, ", ", currentValueLength);
+            if(value == NULL){
+                ERROR_LOG_FATAL("toString: Memory allocation failure for value + separator: '%s'\n", bufferStr); 
+            }
+
+            currentValueLength += 2;
+        }  
+
+        bufferStr = __concatString(bufferStr, value, maxBufferStrLength);
+        if(bufferStr == NULL){
+            ERROR_LOG_FATAL("toString: Memory allocation failure for buffer: '%s'\n", bufferStr); 
+        }
+
+        size_t newBufferStrLength = bufferStrLength + currentValueLength;
+        maxBufferStrLength = maxBufferStrLength > newBufferStrLength? maxBufferStrLength: newBufferStrLength;
+
+        currentRecordPtr = currentRecordPtr->next;
+        count++;
+    }
+      
+    strcat(bufferStr, "}");
+    bufferStr = __concatString(bufferStr, "}", maxBufferStrLength);
+    if(bufferStr == NULL){
+        ERROR_LOG_FATAL("toString: Memory allocation failure adding '}': '%s'\n", bufferStr); 
     }
 
-    fprintf(stream, "}");
+    return bufferStr;
 }
 
-char* __createHeapAllocatedString(char * str, int maxCharaters){
-    char *string = malloc(maxCharaters * sizeof(char));
+char* __createHeapAllocatedString(char * str, size_t maxCharaters){
+    size_t strLength = strlen(str);
+    size_t maxStrLength = strLength > maxCharaters? strLength: maxCharaters;
+    // +1 accounts for the \0 terminator of the string
+    size_t maxBytes = (maxStrLength * sizeof(char)) + 1;
+    char *string = (char*) malloc(maxBytes);
 
     if(string == NULL){
-        fprintf(stderr, "failed to allocate required memeory\n");
-    } else {
-        strcpy(string, str);
+        reportError(HW_MEM_ALLOC_ERROR);
+        return NULL;
     }
 
-    return string;
+    return strcpy(string, str);
 }
+
+char* __concatString(char* dest, char* src, size_t currentMaxStrLength){
+    size_t newStrLength = strlen(dest) + strlen(src);
+
+    if(newStrLength > currentMaxStrLength){
+        dest = (char*) realloc(dest, newStrLength);
+    }
+
+    if(dest == NULL){
+        reportError(HW_MEM_ALLOC_ERROR);
+        return NULL; 
+    }
+
+    return strcat(dest, src);
+}
+
