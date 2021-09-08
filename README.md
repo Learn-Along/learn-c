@@ -1,5 +1,7 @@
 # Learn along C
 
+> "Give thanks to the LORD because He is good and His love is eternal" - Psalm 118: 1
+
 This is a collection of code samples from the journey of learning C
 
 ## Learning Resources
@@ -7,60 +9,12 @@ This is a collection of code samples from the journey of learning C
 - [Crafting Interpreters by Robert Nystrom](https://craftinginterpreters.com/)
 - [tutorialspoint C tutorial](https://www.tutorialspoint.com/cprogramming)
 
-## Dependencies
+## Projects
 
-- gcc 7.5
+There are a number of projects I developed as I learnt production-grade C programming.
 
-## How to Run
+- [Doubly-linked String List](./projects/doubly_linked_string_list)
 
-- Install gcc 7.5
-- Install cmake and make
+## License
 
-  ```sh
-  sudo apt-get install cmake make
-  ```
-
-- Clone the repository and enter the directory
-
-  ```sh
-  git clone https://github.com/learn-along/learn-c && cd learn-c
-  ```
-
-- Make the build script executable
-
-  ```sh
-  sudo chmod +x build.sh
-  ```
-
-- Run the build script
-
-  ```sh
-  ./build.sh
-  ```
-
-## How to Test
-
-- Install gcc 7.5
-- Install cmake and make
-
-  ```sh
-  sudo apt-get install cmake make
-  ```
-
-- Clone the repository and enter the directory
-
-  ```sh
-  git clone https://github.com/learn-along/learn-c && cd learn-c
-  ```
-
-- Make the test script executable
-
-  ```sh
-  sudo chmod +x test.sh
-  ```
-
-- Run the test script
-
-  ```sh
-  ./test.sh
-  ```
+Copyright (c) 2021 [Martin Ahindura](https://github.com/Tinitto) Licensed under the [MIT License](./LICENSE)

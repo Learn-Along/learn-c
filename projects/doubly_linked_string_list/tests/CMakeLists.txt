@@ -7,11 +7,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src)
 # set(CHECK_INSTALL_DIR "C:/Program Files/check")
 
 find_package(Check REQUIRED)
+# Deal with "undefined reference to symbol '__pthread_unregister_cancel@@GLIBC_2.3.3'" error
+# https://github.com/libcheck/check/issues/48#issuecomment-353591603
+find_package(Threads REQUIRED)
 include_directories(${CHECK_INCLUDE_DIRS})
 
 set(TEST_SOURCES
-  check_hello_world.c
+  check_dl_string_list.c
 )
 
-add_executable(check_hello_world ${TEST_SOURCES})
-target_link_libraries(check_hello_world helloworld ${CHECK_LIBRARIES})
+add_executable(check_dl_string_list ${TEST_SOURCES})
+target_link_libraries(check_dl_string_list dlstringlist ${CHECK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
