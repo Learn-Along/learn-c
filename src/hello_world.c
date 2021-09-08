@@ -209,7 +209,6 @@ char* toString(List *records){
         count++;
     }
       
-    strcat(bufferStr, "}");
     bufferStr = __concatString(bufferStr, "}", maxBufferStrLength);
     if(bufferStr == NULL){
         ERROR_LOG_FATAL("toString: Memory allocation failure adding '}': '%s'\n", bufferStr); 

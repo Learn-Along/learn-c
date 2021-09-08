@@ -26,28 +26,39 @@
 // }
 // END_TEST
 
-// START_TEST(TestToString)
-// {
-//     _Record first = {.value="hi"};
-//     _Record second = {.value="hello"};
-//     _Record third = {.value="bonjour"};
+START_TEST(TestToString)
+{
+    size_t sizeOfCharPtr = sizeof(char*);
 
-//     // arranging in order
-//     first.next = &second;
-//     second.previous = &first;
-//     second.next = &third;
-//     third.previous = &second;
+    char* firstStr = (char*) malloc((2 * sizeOfCharPtr) + 1);
+    strcpy(firstStr, "hi");
 
-//     List records = {.data=&first, .length=3};
+    char* secondStr = (char*) malloc((5 * sizeOfCharPtr) + 1);
+    strcpy(secondStr, "hello");
+
+    char* thirdStr = (char*) malloc((7 * sizeOfCharPtr) + 1);
+    strcpy(thirdStr, "bonjour");
+
+    _Record first = {.value=firstStr};
+    _Record second = {.value=secondStr};
+    _Record third = {.value=thirdStr};
+
+    // arranging in order
+    first.next = &second;
+    second.previous = &first;
+    second.next = &third;
+    third.previous = &second;
+
+    List records = {.data=&first, .length=3};
     
-//     char* expected = "{hi, hello, bonjour}";
-//     char* actual = toString(&records);
-//     ck_assert_msg(
-//         strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
-//     FREE_IF_DEFINED(actual);
-//     freeList(&records);
-// }
-// END_TEST
+    char* expected = "{hi, hello, bonjour}";
+    char* actual = toString(&records);
+    ck_assert_msg(
+        strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
+    FREE_IF_DEFINED(actual);
+    freeList(&records);
+}
+END_TEST
 
 START_TEST(TestFreeList)
 {
@@ -131,7 +142,7 @@ Suite* createHelloWorldTestSuite(void){
     tcase_add_test(tcCore, TestCreateHeapAllocatedString);
     tcase_add_test(tcCore, TestConcatString);
     tcase_add_test(tcCore, TestFreeList);
-    // tcase_add_test(tcCore, TestToString);
+    tcase_add_test(tcCore, TestToString);
     // tcase_add_test(tcCore, TestAppendItem);
 
     suite_add_tcase(s, tcCore);
