@@ -16,21 +16,81 @@
 //         appendItem(&records, strings[i]);
 //     }
 
-//     actual = toString(&records);
-//     ck_assert_msg(
-//         strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
+//     // actual = toString(&records);
+//     // ck_assert_msg(
+//     //     strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
 
-//     free(actual);
+//     // FREE_IF_DEFINED(actual);
 
 //     // freeList(&records);    
 // }
 // END_TEST
 
-// START_TEST(TestInsertItem)
+// START_TEST(TestToString)
 // {
+//     _Record first = {.value="hi"};
+//     _Record second = {.value="hello"};
+//     _Record third = {.value="bonjour"};
 
+//     // arranging in order
+//     first.next = &second;
+//     second.previous = &first;
+//     second.next = &third;
+//     third.previous = &second;
+
+//     List records = {.data=&first, .length=3};
+    
+//     char* expected = "{hi, hello, bonjour}";
+//     char* actual = toString(&records);
+//     ck_assert_msg(
+//         strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
+//     FREE_IF_DEFINED(actual);
+//     freeList(&records);
 // }
 // END_TEST
+
+START_TEST(TestFreeList)
+{
+    size_t sizeOfCharPtr = sizeof(char*);
+
+    char* firstStr = (char*) malloc((2 * sizeOfCharPtr) + 1);
+    strcpy(firstStr, "hi");
+
+    char* secondStr = (char*) malloc((5 * sizeOfCharPtr) + 1);
+    strcpy(secondStr, "hello");
+
+    char* thirdStr = (char*) malloc((7 * sizeOfCharPtr) + 1);
+    strcpy(thirdStr, "bonjour");
+
+    _Record first = {.value=firstStr};
+    _Record second = {.value=secondStr};
+    _Record third = {.value=thirdStr};
+
+    // arranging in order
+    first.next = &second;
+    second.previous = &first;
+    second.next = &third;
+    third.previous = &second;
+    third.next = NULL;
+
+    List records = {.data=&first, .length=3};
+
+    _Record* currentRecord = records.data;
+    for (size_t i = 0; i < records.length; i++)
+    {
+        ck_assert_ptr_ne(currentRecord->value, NULL);
+        currentRecord = currentRecord->next;
+    } 
+
+    freeList(&records);
+    currentRecord = records.data;
+    for (size_t i = 0; i < records.length; i++)
+    {
+        ck_assert_ptr_eq(currentRecord->value, NULL);
+        currentRecord = currentRecord->next;
+    }    
+}
+END_TEST
 
 START_TEST(TestCreateHeapAllocatedString)
 {
@@ -38,7 +98,7 @@ START_TEST(TestCreateHeapAllocatedString)
     char* actual = __createHeapAllocatedString(expected, strlen(expected));
     ck_assert_msg(
         strcmp(expected, actual) == 0, "expected %s; got %s", expected, actual);
-    free(actual);
+    FREE_IF_DEFINED(actual);
 }
 END_TEST
 
@@ -70,6 +130,8 @@ Suite* createHelloWorldTestSuite(void){
     tcCore = tcase_create("Core");
     tcase_add_test(tcCore, TestCreateHeapAllocatedString);
     tcase_add_test(tcCore, TestConcatString);
+    tcase_add_test(tcCore, TestFreeList);
+    // tcase_add_test(tcCore, TestToString);
     // tcase_add_test(tcCore, TestAppendItem);
 
     suite_add_tcase(s, tcCore);

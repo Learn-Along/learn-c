@@ -158,9 +158,10 @@ void deleteItem(List *records, int index){
 
 void freeList(List *records){
     _Record* currentRecordPtr = records->data;
-    int count = 0;
+
     while(currentRecordPtr != NULL){
-        free(currentRecordPtr->value);
+        FREE_IF_DEFINED(currentRecordPtr->value);
+        currentRecordPtr = currentRecordPtr->next;
     }
 }
 
